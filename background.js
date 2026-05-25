@@ -12,8 +12,19 @@ async function openEditor(url, info, tab) {
   if (messages.length != 1) return;
   if (await getOpenEditor("/editor/")) return;
 
+  if (info.menuItemId == "hdrtools-edit")
   browser.windows.create({
     type: "popup",
+    height: 416,
+    width: 832,
+    url: url + "?tabId=" + tab.id + "&messageId=" + messages[0].id,
+    allowScriptsToClose: true,
+  });
+  else
+  browser.windows.create({
+    type: "popup",
+    height: 640,
+    width: 960,
     url: url + "?tabId=" + tab.id + "&messageId=" + messages[0].id,
     allowScriptsToClose: true,
   });

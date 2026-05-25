@@ -119,7 +119,7 @@ async function save() {
     headers = replaceHeader(headers, "In-Reply-To", newInReplyTo);
     headers = replaceHeader(headers, "References", newRef);
 
-    // Remove X-Mozilla headers, to avoid duplicates, they will be regenerated
+    // Remove automatically generated X-Mozilla headers, to have fewer duplicates
     headers = headers.replace(/X-Mozilla-.+\r\n/g, "");
 
     if (newRef === "")
