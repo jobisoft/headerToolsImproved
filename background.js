@@ -7,24 +7,16 @@ async function getOpenEditor(urlFragment) {
   return popups.find((p) => p.tabs?.[0]?.url?.startsWith(baseUrl));
 }
 
-async function openEditor(url, info, tab) {
+async function openEditor(url, tab) {
+  const list = await browser.mailTabs.getSelectedMessages(tab.id);
+  if (!list || list.messages.length != 1) return;
+  const info = { selectedMessages: list };
   const { messages } = info.selectedMessages;
   if (messages.length != 1) return;
   if (await getOpenEditor("/editor/")) return;
 
-  if (info.menuItemId == "hdrtools-edit")
   browser.windows.create({
     type: "popup",
-    height: 416,
-    width: 832,
-    url: url + "?tabId=" + tab.id + "&messageId=" + messages[0].id,
-    allowScriptsToClose: true,
-  });
-  else
-  browser.windows.create({
-    type: "popup",
-    height: 640,
-    width: 960,
     url: url + "?tabId=" + tab.id + "&messageId=" + messages[0].id,
     allowScriptsToClose: true,
   });
@@ -51,19 +43,19 @@ async function init() {
   browser.menus.create({
     id: "hdrtools-edit",
     title: browser.i18n.getMessage("changeDetails"),
-    contexts: ["message_list"],
+    contexts: ["message_list", "page"],
   });
 
   browser.menus.create({
     id: "hdrtools-editFS",
     title: browser.i18n.getMessage("fullSource"),
-    contexts: ["message_list"],
+    contexts: ["message_list", "page"],
   });
 
   browser.menus.create({
     id: "hdrtools-options",
     title: browser.i18n.getMessage("prefTitle"),
-    contexts: ["message_list"],
+    contexts: ["message_list", "page"],
   });
 
   browser.menus.onClicked.addListener(async (info, tab) => {

@@ -117,6 +117,13 @@ async function save() {
 
     data = cleanCRLF(data);
 
+    // Remove automatically generated X-Mozilla headers, to avoid duplicates
+    data = data.replace(/X-Mozilla-.+\r\n/g, "");
+
+    // Append CRLF to the last line if missing, to avoid it being deleted
+    let lastChar = data.slice(-2);
+    if (lastChar!="\r\n") data = data + "\r\n";
+
     if (await getPref("add_htl_header"))
       data = addHTLHeader(data, "bodyChanged");
 
@@ -135,7 +142,7 @@ async function save() {
         console.debug("Could not select updated message", e);
       }
       showStatus("ok");
-      // Update internal state for re-editing
+      // Update internal state before closing
       messageId = result.id;
       const newRawFile = await getRawFile(messageId);
       fullRawSource = await newRawFile.text();
@@ -143,6 +150,7 @@ async function save() {
       document.getElementById("editFSarea").value = fullRawSource;
       charLimit = -1;
       document.getElementById("btn_showFull").classList.add("hidden");
+      window.close();
     } else {
       showStatus("err");
     }

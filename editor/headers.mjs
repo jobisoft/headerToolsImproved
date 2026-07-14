@@ -119,7 +119,7 @@ async function save() {
     headers = replaceHeader(headers, "In-Reply-To", newInReplyTo);
     headers = replaceHeader(headers, "References", newRef);
 
-    // Remove automatically generated X-Mozilla headers, to have fewer duplicates
+    // Remove automatically generated X-Mozilla headers, to avoid duplicates
     headers = headers.replace(/X-Mozilla-.+\r\n/g, "");
 
     if (newRef === "")
@@ -160,13 +160,14 @@ async function save() {
         console.debug("Could not select updated message", e);
       }
       showStatus("ok");
-      // Update internal state so the user can save again
+      // Update internal state before closing
       messageId = result.id;
       rawFile = await getRawFile(messageId);
       rawText = await rawFile.text();
       origDate = getOrigDate(rawText);
       const full = await messenger.messages.getFull(messageId);
       origInReplyTo = full.headers?.["in-reply-to"]?.[0] || "";
+      window.close();
     } else {
       showStatus("err");
     }

@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "__MSG_extName__",
   "description": "Allows to modify the header and the source of messages.",
-  "version": "5.0b2",
+  "version": "5.0b4",
   "author": "Dillinger",
   "homepage_url": "https://addons.thunderbird.net/en-US/thunderbird/addon/header-tools-improved/",
   "default_locale": "en-US",
@@ -41,6 +41,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "hdrtoolslite@dillinger",
+      "update_url": "https://addons.phoenity.nl/updates.txt",
       "strict_min_version": "140.0"
     }
   },
